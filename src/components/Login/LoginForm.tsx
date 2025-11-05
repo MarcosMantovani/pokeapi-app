@@ -83,7 +83,11 @@ const LoginForm: React.FC = () => {
               <CardContent className="p-8">
                 {/* Header */}
                 <Box className="text-center mb-6 w-3/5 mx-auto">
-                  <img src="/images/pokeapi-logo.svg" alt="Pokeapi" />
+                  <img
+                    src="/images/pokeball-icon.png"
+                    alt="Pokeapi"
+                    className="w-24 h-24 mx-auto"
+                  />
 
                   <Typography
                     variant="body1"
