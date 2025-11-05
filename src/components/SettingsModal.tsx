@@ -1,9 +1,4 @@
-import {
-  Brightness4,
-  Brightness7,
-  Close,
-  VolumeOff,
-} from "@mui/icons-material";
+import { Brightness4, Brightness7, Close } from "@mui/icons-material";
 import {
   Box,
   Dialog,
@@ -39,7 +34,6 @@ export function SettingsModal({ open, onClose }: SettingsModalProps) {
       PaperProps={{
         sx: {
           borderRadius: 2,
-          minHeight: 300,
         },
       }}
     >
@@ -72,24 +66,6 @@ export function SettingsModal({ open, onClose }: SettingsModalProps) {
 
       <DialogContent sx={{ py: 3 }}>
         <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
-          {/* Configuração de Notificações */}
-          <Box>
-            <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
-              <VolumeOff
-                sx={{
-                  mr: 1.5,
-                  color: palette.text.secondary,
-                  fontSize: 20,
-                }}
-              />
-              <Typography variant="subtitle1" fontWeight="medium">
-                Notificações
-              </Typography>
-            </Box>
-          </Box>
-
-          <Divider />
-
           {/* Configuração de Tema */}
           <Box>
             <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
