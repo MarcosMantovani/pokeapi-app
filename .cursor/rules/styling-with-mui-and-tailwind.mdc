@@ -1,0 +1,50 @@
+---
+description: Esta regra é útil em tasks que envolvem a construção ou manutenção de interfaces
+alwaysApply: false
+---
+# Regras de Styling com MUI e Tailwind
+
+## Diretrizes Gerais
+
+- **Use Tailwind para layout, espaçamento, grid, responsividade rápida.**
+  - Prefira classes do Tailwind para: `margin`, `padding`, `flexbox`, `grid`, `responsive breakpoints`
+  - Exemplos: `p-4`, `mt-8`, `flex`, `grid-cols-2`, `md:flex-row`
+
+- **Use MUI para componentes mais pesados (dialogs, menus, cards, sliders, etc).**
+  - Prefira componentes MUI para: `Dialog`, `Menu`, `Card`, `Slider`, `Autocomplete`, `DataGrid`
+  - Componentes complexos com funcionalidades avançadas
+
+- **Você pode sobrescrever os estilos do MUI com `sx={{}}` ou `styled()` caso queira alinhar com a identidade visual do Tailwind.**
+  - Use `sx={{}}` para customizações pontuais
+  - Use `styled()` para componentes reutilizáveis
+  - Mantenha consistência visual com o design system do Tailwind
+
+## Tema e Cores
+
+- **Sempre use as cores definidas em `/contexts/CustomThemeProvider.tsx`.**
+  - Evite hardcodear cores como `#000`, `#fff`, `#1976d2`, etc.
+  - Utilize `theme.palette.primary.main`, `theme.palette.secondary.main`, etc., ou `color="primary"` nos componentes MUI.
+  - Isso garante consistência com o tema claro/escuro e facilita ajustes futuros.
+# Regras de Styling com MUI e Tailwind
+
+## Diretrizes Gerais
+
+- **Use Tailwind para layout, espaçamento, grid, responsividade rápida.**
+  - Prefira classes do Tailwind para: `margin`, `padding`, `flexbox`, `grid`, `responsive breakpoints`
+  - Exemplos: `p-4`, `mt-8`, `flex`, `grid-cols-2`, `md:flex-row`
+
+- **Use MUI para componentes mais pesados (dialogs, menus, cards, sliders, etc).**
+  - Prefira componentes MUI para: `Dialog`, `Menu`, `Card`, `Slider`, `Autocomplete`, `DataGrid`
+  - Componentes complexos com funcionalidades avançadas
+
+- **Você pode sobrescrever os estilos do MUI com `sx={{}}` ou `styled()` caso queira alinhar com a identidade visual do Tailwind.**
+  - Use `sx={{}}` para customizações pontuais
+  - Use `styled()` para componentes reutilizáveis
+  - Mantenha consistência visual com o design system do Tailwind
+
+## Tema e Cores
+
+- **Sempre use as cores definidas em `/contexts/CustomThemeProvider.tsx`.**
+  - Evite hardcodear cores como `#000`, `#fff`, `#1976d2`, etc.
+  - Utilize `theme.palette.primary.main`, `theme.palette.secondary.main`, etc., ou `color="primary"` nos componentes MUI.
+  - Isso garante consistência com o tema claro/escuro e facilita ajustes futuros.
