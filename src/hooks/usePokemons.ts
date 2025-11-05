@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { useAuthenticatedRequest } from "./useAuthenticatedRequest";
 import { PaginatedPokemons } from "../types/api";
-import { Pokemon } from "../types/pokemon";
+import { EvolutionNode, Pokemon } from "../types/pokemon";
 
 interface ListPokemonsParams {
   limit?: number;
@@ -14,6 +14,9 @@ interface UsePokemonsReturn {
   favorite_pokemon: (pokemon_external_id_or_name: string) => Promise<Pokemon>;
   unfavorite_pokemon: (pokemon_external_id_or_name: string) => Promise<Pokemon>;
   list_favorite_pokemons: () => Promise<PaginatedPokemons>;
+  get_evolution_chain: (
+    pokemon_external_id_or_name: string,
+  ) => Promise<EvolutionNode>;
   loading: boolean;
   error: string | null;
   reset: () => void;
@@ -21,7 +24,7 @@ interface UsePokemonsReturn {
 
 export const usePokemons = (): UsePokemonsReturn => {
   const { execute, loading, error, reset } = useAuthenticatedRequest<
-    PaginatedPokemons | Pokemon
+    PaginatedPokemons | Pokemon | EvolutionNode
   >();
 
   const list_pokemons = useCallback(
@@ -77,12 +80,22 @@ export const usePokemons = (): UsePokemonsReturn => {
       return (await execute(endpoint)) as PaginatedPokemons;
     }, [execute]);
 
+  const get_evolution_chain = useCallback(
+    async (pokemon_external_id_or_name: string): Promise<EvolutionNode> => {
+      const formatted = pokemon_external_id_or_name.trim().toLowerCase();
+      const endpoint = `/api/pokemons/evolution-chains/${formatted}/`;
+      return (await execute(endpoint)) as EvolutionNode;
+    },
+    [execute],
+  );
+
   return {
     list_pokemons,
     get_pokemon,
     favorite_pokemon,
     unfavorite_pokemon,
     list_favorite_pokemons,
+    get_evolution_chain,
     loading,
     error,
     reset,

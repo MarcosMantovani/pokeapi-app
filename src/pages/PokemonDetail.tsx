@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Box, Paper } from "@mui/material";
 import BasePageLayout from "../components/BasePageLayout";
 import { usePokemons } from "../hooks/usePokemons";
-import { Pokemon } from "../types/pokemon";
+import { Pokemon, EvolutionNode } from "../types/pokemon";
 import PokeballLoader from "../components/PokeballLoader/PokeballLoader";
 import { PokemonDetailHeader } from "../components/Pokemons/PokemonDetail/PokemonDetailHeader";
 import { PokemonDetailContent } from "../components/Pokemons/PokemonDetail/PokemonDetailContent";
@@ -11,9 +11,13 @@ import { PokemonDetailContent } from "../components/Pokemons/PokemonDetail/Pokem
 const PokemonDetail = () => {
   const { name } = useParams<{ name: string }>();
   const navigate = useNavigate();
-  const { get_pokemon, loading } = usePokemons();
+  const { get_pokemon, get_evolution_chain, loading } = usePokemons();
   const [pokemon, setPokemon] = useState<Pokemon | null>(null);
+  const [evolutionChain, setEvolutionChain] = useState<EvolutionNode | null>(
+    null,
+  );
   const [error, setError] = useState<string | null>(null);
+  const [loadingPokemon, setLoadingPokemon] = useState(false);
 
   const handlePokemonUpdate = (updatedPokemon: Pokemon) => {
     setPokemon(updatedPokemon);
@@ -21,6 +25,7 @@ const PokemonDetail = () => {
 
   useEffect(() => {
     const loadPokemon = async () => {
+      setLoadingPokemon(true);
       if (!name) {
         navigate("/");
         return;
@@ -28,18 +33,24 @@ const PokemonDetail = () => {
 
       try {
         setError(null);
-        const data = await get_pokemon(name);
-        setPokemon(data);
+        const [pokemonData, evolutionData] = await Promise.all([
+          get_pokemon(name),
+          get_evolution_chain(name).catch(() => null),
+        ]);
+        setPokemon(pokemonData);
+        setEvolutionChain(evolutionData);
       } catch (err: any) {
         console.error("Erro ao carregar pokémon:", err);
         setError("Pokémon não encontrado");
+      } finally {
+        setLoadingPokemon(false);
       }
     };
 
     loadPokemon();
-  }, [name, get_pokemon, navigate]);
+  }, [name, get_pokemon, get_evolution_chain, navigate]);
 
-  if (loading) {
+  if (loading || loadingPokemon) {
     return (
       <BasePageLayout sx={{ display: "flex", height: "100vh", width: "100%" }}>
         <Box
@@ -98,7 +109,10 @@ const PokemonDetail = () => {
             pokemon={pokemon}
             onPokemonUpdate={handlePokemonUpdate}
           />
-          <PokemonDetailContent pokemon={pokemon} />
+          <PokemonDetailContent
+            pokemon={pokemon}
+            evolutionChain={evolutionChain}
+          />
         </Box>
       </Paper>
     </BasePageLayout>

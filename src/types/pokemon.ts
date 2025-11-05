@@ -16,3 +16,9 @@ export interface Pokemon {
   cry: string;
   is_favorited: boolean;
 }
+
+export interface EvolutionNode {
+  pokemon: Pokemon;
+  evolution_text: string | null;
+  evolves_to: EvolutionNode[];
+}
