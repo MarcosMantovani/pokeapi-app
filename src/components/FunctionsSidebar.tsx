@@ -1,4 +1,4 @@
-import { Logout, Pets, Settings } from "@mui/icons-material";
+import { Favorite, Logout, Pets, Settings } from "@mui/icons-material";
 import {
   Box,
   List,
@@ -73,6 +73,15 @@ export function FunctionsSidebar({
         },
         has_permission: () => true,
         isActive: () => location.pathname === "/",
+      },
+      {
+        icon: <Favorite />,
+        label: "Favoritos",
+        onClick: () => {
+          navigate("/favorites");
+        },
+        has_permission: () => true,
+        isActive: () => location.pathname === "/favorites",
       },
     ],
     [location.pathname, navigate],

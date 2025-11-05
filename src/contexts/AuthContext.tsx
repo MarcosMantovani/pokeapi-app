@@ -9,6 +9,7 @@ import {
   AuthContextType,
   AuthTokens,
   LoginCredentials,
+  RegisterCredentials,
   RefreshTokenResponse,
   User,
 } from "../types/auth";
@@ -161,6 +162,63 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         showNotification("error", `Erro ao fazer login: ${error.message}`);
       } else {
         showNotification("error", "Erro ao fazer login. Tente novamente.");
+      }
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const register = async (credentials: RegisterCredentials): Promise<void> => {
+    try {
+      setIsLoading(true);
+
+      const response = await fetch(`${API_BASE_URL}/api/auth/register/`, {
+        method: "POST",
+        headers: getCommonHeaders(),
+        body: JSON.stringify({
+          first_name: credentials.first_name,
+          last_name: credentials.last_name,
+          email: credentials.email,
+          password: credentials.password,
+        }),
+      });
+
+      if (response.ok) {
+        const tokenData = await response.json();
+
+        const authTokens: AuthTokens = {
+          access: tokenData.access,
+          refresh: tokenData.refresh,
+        };
+
+        setTokens(authTokens);
+        setStoredTokens(authTokens);
+
+        // Fetch user profile after successful registration
+        await fetchUserProfile(tokenData.access);
+
+        // Show success notification
+        showNotification("success", "Conta criada com sucesso!");
+      } else {
+        const errorData = await response.json().catch(() => ({}));
+        const errorMessage =
+          errorData.detail ||
+          errorData.message ||
+          errorData.email?.[0] ||
+          errorData.password?.[0] ||
+          `Registro falhou com status ${response.status}`;
+        console.error("Register failed:", response.status, errorData);
+
+        // Show error notification
+        throw new Error(errorMessage);
+      }
+    } catch (error) {
+      console.error("Register error:", error);
+      if (error instanceof Error) {
+        showNotification("error", `Erro ao criar conta: ${error.message}`);
+      } else {
+        showNotification("error", "Erro ao criar conta. Tente novamente.");
       }
       throw error;
     } finally {
@@ -344,6 +402,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     isAuthenticated: !!user,
     isLoading,
     login,
+    register,
     logout,
     refreshToken,
     makeAuthenticatedRequest,

@@ -7,7 +7,9 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import { useAuth } from "./contexts/AuthContext";
 import Pokemons from "./pages/Pokemons";
 import Login from "./pages/Login";
+import Register from "./pages/Register";
 import PokemonDetail from "./pages/PokemonDetail";
+import FavoritePokemons from "./pages/FavoritePokemons";
 import { FunctionsSidebar } from "./components/FunctionsSidebar";
 
 export const COLLAPSED_FUNCTIONS_SIDEBAR_WIDTH = 48;
@@ -49,6 +51,7 @@ const PageRoutes = () => {
       <Routes>
         {/* Public routes */}
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
 
         {/* Protected routes */}
         <Route
@@ -64,6 +67,14 @@ const PageRoutes = () => {
           element={
             <ProtectedRoute>
               <PokemonDetail />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/favorites"
+          element={
+            <ProtectedRoute>
+              <FavoritePokemons />
             </ProtectedRoute>
           }
         />

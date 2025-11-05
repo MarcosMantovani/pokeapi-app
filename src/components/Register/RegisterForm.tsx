@@ -1,7 +1,8 @@
 import {
   Email as EmailIcon,
   Lock as LockIcon,
-  Login as LoginIcon,
+  Person as PersonIcon,
+  PersonAdd as PersonAddIcon,
 } from "@mui/icons-material";
 import {
   Box,
@@ -21,15 +22,17 @@ import {
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
-import { LoginCredentials } from "../../types/auth";
+import { RegisterCredentials } from "../../types/auth";
 
-const LoginForm: React.FC = () => {
+const RegisterForm: React.FC = () => {
   const { palette } = useTheme();
   const navigate = useNavigate();
 
-  const { login, isLoading } = useAuth();
+  const { register, isLoading } = useAuth();
 
-  const [credentials, setCredentials] = useState<LoginCredentials>({
+  const [credentials, setCredentials] = useState<RegisterCredentials>({
+    first_name: "",
+    last_name: "",
     email: "",
     password: "",
   });
@@ -37,12 +40,17 @@ const LoginForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    await login(credentials);
-    // erro já tratado pelo useAuth
+    try {
+      await register(credentials);
+      // Se o registro for bem-sucedido, o usuário já estará logado
+      navigate("/", { replace: true });
+    } catch (error) {
+      // erro já tratado pelo useAuth
+    }
   };
 
   const handleChange =
-    (field: keyof LoginCredentials) =>
+    (field: keyof RegisterCredentials) =>
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setCredentials((prev) => ({
         ...prev,
@@ -90,12 +98,72 @@ const LoginForm: React.FC = () => {
                     color={palette.text.secondary}
                     sx={{ opacity: 0.8 }}
                   >
-                    Faça login para continuar
+                    Crie sua conta para continuar
                   </Typography>
                 </Box>
 
                 {/* Form */}
                 <Box component="form" onSubmit={handleSubmit}>
+                  <TextField
+                    fullWidth
+                    label="Primeiro Nome"
+                    value={credentials.first_name}
+                    onChange={handleChange("first_name")}
+                    margin="normal"
+                    required
+                    disabled={isLoading}
+                    autoComplete="given-name"
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <PersonIcon color="action" />
+                        </InputAdornment>
+                      ),
+                    }}
+                    sx={{
+                      mb: 2,
+                      "& .MuiOutlinedInput-root": {
+                        transition: "all 0.3s ease",
+                        "&:hover": {
+                          transform: "translateY(-1px)",
+                        },
+                        "&.Mui-focused": {
+                          transform: "translateY(-1px)",
+                        },
+                      },
+                    }}
+                  />
+
+                  <TextField
+                    fullWidth
+                    label="Segundo Nome"
+                    value={credentials.last_name}
+                    onChange={handleChange("last_name")}
+                    margin="normal"
+                    required
+                    disabled={isLoading}
+                    autoComplete="family-name"
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <PersonIcon color="action" />
+                        </InputAdornment>
+                      ),
+                    }}
+                    sx={{
+                      mb: 2,
+                      "& .MuiOutlinedInput-root": {
+                        transition: "all 0.3s ease",
+                        "&:hover": {
+                          transform: "translateY(-1px)",
+                        },
+                        "&.Mui-focused": {
+                          transform: "translateY(-1px)",
+                        },
+                      },
+                    }}
+                  />
+
                   <TextField
                     fullWidth
                     label="Email"
@@ -114,7 +182,7 @@ const LoginForm: React.FC = () => {
                       ),
                     }}
                     sx={{
-                      mb: 3,
+                      mb: 2,
                       "& .MuiOutlinedInput-root": {
                         transition: "all 0.3s ease",
                         "&:hover": {
@@ -136,7 +204,7 @@ const LoginForm: React.FC = () => {
                     margin="normal"
                     required
                     disabled={isLoading}
-                    autoComplete="current-password"
+                    autoComplete="new-password"
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
@@ -192,23 +260,23 @@ const LoginForm: React.FC = () => {
                             color: "white",
                           }}
                         />
-                        Entrando...
+                        Criando conta...
                       </Box>
                     ) : (
                       <Box className="flex items-center justify-center">
-                        <LoginIcon sx={{ mr: 1 }} />
-                        Entrar
+                        <PersonAddIcon sx={{ mr: 1 }} />
+                        Criar Conta
                       </Box>
                     )}
                   </Button>
 
                   <Box sx={{ mt: 3, textAlign: "center" }}>
                     <Typography variant="body2" color="text.secondary">
-                      Não tem uma conta?{" "}
+                      Já tem uma conta?{" "}
                       <Link
                         component="button"
                         type="button"
-                        onClick={() => navigate("/register")}
+                        onClick={() => navigate("/login")}
                         sx={{
                           color: palette.primary.main,
                           textDecoration: "none",
@@ -218,7 +286,7 @@ const LoginForm: React.FC = () => {
                           },
                         }}
                       >
-                        Criar conta
+                        Fazer login
                       </Link>
                     </Typography>
                   </Box>
@@ -232,4 +300,4 @@ const LoginForm: React.FC = () => {
   );
 };
 
-export default LoginForm;
+export default RegisterForm;
