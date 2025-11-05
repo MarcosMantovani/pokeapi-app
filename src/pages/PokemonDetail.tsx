@@ -15,6 +15,10 @@ const PokemonDetail = () => {
   const [pokemon, setPokemon] = useState<Pokemon | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  const handlePokemonUpdate = (updatedPokemon: Pokemon) => {
+    setPokemon(updatedPokemon);
+  };
+
   useEffect(() => {
     const loadPokemon = async () => {
       if (!name) {
@@ -90,7 +94,10 @@ const PokemonDetail = () => {
         }}
       >
         <Box sx={{ maxWidth: "1200px", width: "100%", mx: "auto", p: 4 }}>
-          <PokemonDetailHeader pokemon={pokemon} />
+          <PokemonDetailHeader
+            pokemon={pokemon}
+            onPokemonUpdate={handlePokemonUpdate}
+          />
           <PokemonDetailContent pokemon={pokemon} />
         </Box>
       </Paper>

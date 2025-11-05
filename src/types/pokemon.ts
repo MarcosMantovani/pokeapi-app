@@ -14,4 +14,5 @@ export interface Pokemon {
   weight: number;
   types: string[];
   cry: string;
+  is_favorited: boolean;
 }

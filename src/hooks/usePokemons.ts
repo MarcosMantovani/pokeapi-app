@@ -11,6 +11,9 @@ interface ListPokemonsParams {
 interface UsePokemonsReturn {
   list_pokemons: (params?: ListPokemonsParams) => Promise<PaginatedPokemons>;
   get_pokemon: (pokemon_external_id_or_name: string) => Promise<Pokemon>;
+  favorite_pokemon: (pokemon_external_id_or_name: string) => Promise<Pokemon>;
+  unfavorite_pokemon: (pokemon_external_id_or_name: string) => Promise<Pokemon>;
+  list_favorite_pokemons: () => Promise<PaginatedPokemons>;
   loading: boolean;
   error: string | null;
   reset: () => void;
@@ -50,9 +53,36 @@ export const usePokemons = (): UsePokemonsReturn => {
     [execute],
   );
 
+  const favorite_pokemon = useCallback(
+    async (pokemon_external_id_or_name: string): Promise<Pokemon> => {
+      const formatted = pokemon_external_id_or_name.trim().toLowerCase();
+      const endpoint = `/api/pokemons/pokemons/${formatted}/favorite/`;
+      return (await execute(endpoint, { method: "POST" })) as Pokemon;
+    },
+    [execute],
+  );
+
+  const unfavorite_pokemon = useCallback(
+    async (pokemon_external_id_or_name: string): Promise<Pokemon> => {
+      const formatted = pokemon_external_id_or_name.trim().toLowerCase();
+      const endpoint = `/api/pokemons/pokemons/${formatted}/unfavorite/`;
+      return (await execute(endpoint, { method: "POST" })) as Pokemon;
+    },
+    [execute],
+  );
+
+  const list_favorite_pokemons =
+    useCallback(async (): Promise<PaginatedPokemons> => {
+      const endpoint = `/api/pokemons/favorited-pokemons/`;
+      return (await execute(endpoint)) as PaginatedPokemons;
+    }, [execute]);
+
   return {
     list_pokemons,
     get_pokemon,
+    favorite_pokemon,
+    unfavorite_pokemon,
+    list_favorite_pokemons,
     loading,
     error,
     reset,
