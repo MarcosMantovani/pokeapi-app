@@ -18,10 +18,11 @@ const BasePageLayout: React.FC<BasePageLayoutProps> = ({
       sx={{
         flexGrow: 1,
         maxWidth: "100vw",
-        width: { xs: "calc(100vw - 48px)", md: "100%" },
-        pl: `${COLLAPSED_FUNCTIONS_SIDEBAR_TOTAL_WIDTH}px`,
-        pr: "24px",
-        py: 2,
+        width: { xs: "100%", md: "100%" },
+        pl: { xs: 0, md: `${COLLAPSED_FUNCTIONS_SIDEBAR_TOTAL_WIDTH}px` },
+        pr: { xs: 0, md: "24px" },
+        pb: { xs: "80px", md: 2 }, // Padding bottom no mobile para a barra inferior
+        pt: 2,
         ...sx,
       }}
       className={className}
